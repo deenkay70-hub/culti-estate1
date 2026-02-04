@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Estate</title>
+<style>
+  body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f4f4; }
+  header { background:#0d47a1; color:white; padding:20px; text-align:center; }
+  header h1 { margin:0; font-size:28px; }
+  header p { margin:5px 0 0; font-size:14px; }
+  .search-bar { display:flex; justify-content:center; margin:20px; }
+  .search-bar input { padding:10px; width:60%; border:1px solid #ccc; border-radius:5px 0 0 5px; }
+  .search-bar button { padding:10px; background:#e53935; color:white; border:none; border-radius:0 5px 5px 0; cursor:pointer; }
+  .properties { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; padding:20px; }
+  .property { background:white; border-radius:10px; overflow:hidden; box-shadow:0 0 10px rgba(0,0,0,0.1); }
+  .property img { width:100%; height:200px; object-fit:cover; }
+  .property-details { padding:15px; }
+  .property-details h3 { margin:0 0 5px 0; font-size:18px; }
+  .property-details p { margin:0 0 10px 0; font-size:14px; color:#555; }
+  .property-details span { font-weight:bold; color:#0d47a1; font-size:16px; }
+  .delete-btn { padding:8px 12px; background:#e53935; color:white; border:none; border-radius:5px; cursor:pointer; }
+  .map-placeholder { width:100%; height:300px; background:#e0e0e0; display:flex; align-items:center; justify-content:center; color:#555; font-size:18px; margin:0 20px 20px 20px; border-radius:10px; }
+  .add-property { display:flex; flex-direction:column; align-items:center; margin:20px; }
+  .add-property input { margin:5px 0; padding:10px; width:60%; border:1px solid #ccc; border-radius:5px; }
+  .add-property button { padding:10px 20px; background:#0d47a1; color:white; border:none; border-radius:5px; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🏡 Smart Estate</h1>
+  <p>Admin Dashboard • Property Management</p>
+</header>
+
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="Search name or address">
+  <button onclick="searchProperty()">Search</button>
+</div>
+
+<!-- Map placeholder -->
+<div class="map-placeholder">Map coming soon</div>
+
+<!-- Add property dynamically -->
+<div class="add-property">
+  <input type="text" id="propName" placeholder="Property Name">
+  <input type="text" id="propLocation" placeholder="Location, City, Country">
+  <input type="text" id="propPrice" placeholder="Price">
+  <input type="text" id="propImg" placeholder="Image URL">
+  <button onclick="addProperty()">Add Property</button>
+</div>
+
+<div class="properties" id="propertiesContainer">
+  <!-- Properties will load here dynamically -->
+</div>
+
+<script>
+// Array to store all properties
+let properties = [
+  {
+    name: "Luxury Duplex",
+    location: "Lekki, Lagos, Nigeria",
+    price: "₦45,000,000",
+    img: "https://images.unsplash.com/photo-1570129477492-45c003edd2be"
+  },
+  {
+    name: "Modern Apartment",
+    location: "Victoria Island, Lagos, Nigeria",
+    price: "₦30,000,000",
+    img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c"
+  },
+  {
+    name: "Cozy Bungalow",
+    location: "Ibadan, Oyo, Nigeria",
+    price: "₦20,000,000",
+    img: "https://images.unsplash.com/photo-1599423300746-b62533397364"
+  }
+];
+
+// Display properties
+function displayProperties(list) {
+  const container = document.getElementById("propertiesContainer");
+  container.innerHTML = "";
+  list.forEach((prop, index) => {
+    container.innerHTML += `
+      <div class="property">
+        <img src="${prop.img}" alt="${prop.name}">
+        <div class="property-details">
+          <h3>${prop.name}</h3>
+          <p>${prop.location}</p>
+          <span>${prop.price}</span><br><br>
+          <button class="delete-btn" onclick="deleteProperty(${index})">Delete</button>
+        </div>
+      </div>
+    `;
+  });
+}
+
+// Delete property
+function deleteProperty(index) {
+  properties.splice(index, 1);
+  displayProperties(properties);
+}
+
+// Search property
+function searchProperty() {
+  const query = document.getElementById("searchInput").value.toLowerCase();
+  const filtered = properties.filter(p => p.name.toLowerCase().includes(query) || p.location.toLowerCase().includes(query));
+  displayProperties(filtered);
+}
+
+// Add new property dynamically
+function addProperty() {
+  const name = document.getElementById("propName").value;
+  const location = document.getElementById("propLocation").value;
+  const price = document.getElementById("propPrice").value;
+  const img = document.getElementById("propImg").value;
+
+  if(name && location && price && img) {
+    properties.push({name, location, price, img});
+    displayProperties(properties);
+
+    // Clear inputs
+    document.getElementById("propName").value = "";
+    document.getElementById("propLocation").value = "";
+    document.getElementById("propPrice").value = "";
+    document.getElementById("propImg").value = "";
+  } else {
+    alert("Please fill in all fields to add a property");
+  }
+}
+
+// Initial load
+displayProperties(properties);
+</script>
+
+</body>
+</html>
